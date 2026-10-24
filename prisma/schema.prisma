@@ -1,0 +1,165 @@
+// Esquema de datos del ecommerce — Prisma ORM 7
+// La URL de conexión NO va aquí: en Prisma 7 se define en prisma.config.ts (datasource.url).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+  // `tsx` no resuelve imports con extensión `.js` hacia los `.ts` generados.
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ProductStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(USER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions Session[]
+  carts    Cart[]
+  orders   Order[]
+}
+
+model Session {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model Category {
+  id       String    @id @default(cuid())
+  name     String
+  slug     String    @unique
+  products Product[]
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  description String
+  priceCents  Int
+  currency    String        @default("usd")
+  imageUrl    String?
+  stock       Int           @default(0)
+  status      ProductStatus @default(ACTIVE)
+  categoryId  String?
+  category    Category?     @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+  images     ProductImage[]
+
+  @@index([status, categoryId])
+}
+
+/// Imágenes del producto: la primera es la portada y las demás forman la galería.
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  position  Int      @default(0)
+  source    String?
+  credit    String?
+  createdAt DateTime @default(now())
+
+  @@index([productId, position])
+}
+
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  guestHash String?  @unique // sha256 del token de la cookie de invitado
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items CartItem[]
+
+  @@index([userId])
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cartId    String
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+
+  @@unique([cartId, productId])
+}
+
+model Order {
+  id                    String        @id @default(cuid())
+  orderNumber           String        @unique
+  userId                String?
+  user                  User?         @relation(fields: [userId], references: [id])
+  email                 String
+  status                OrderStatus   @default(PENDING)
+  paymentStatus         PaymentStatus @default(UNPAID)
+  subtotalCents         Int
+  totalCents            Int
+  currency              String        @default("usd")
+  stripeSessionId       String?       @unique
+  stripePaymentIntentId String?       @unique
+  shippingAddress       Json?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  items OrderItem[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id             String  @id @default(cuid())
+  orderId        String
+  order          Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String
+  product        Product @relation(fields: [productId], references: [id])
+  nameSnapshot   String
+  unitPriceCents Int
+  quantity       Int
+}

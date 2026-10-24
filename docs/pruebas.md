@@ -20,10 +20,20 @@ npm run test:coverage # con reporte de cobertura
 
 ## Base de datos de test
 
-La suite de integración usa la base `ecommerce_test` (cargada desde `.env.test`) y corre los
-archivos **de a uno**, porque comparten la misma base de datos. `tests/global-setup.ts` aplica
-las migraciones antes de empezar y se niega a correr si `DATABASE_URL` no apunta a una base de
-test.
+La suite de integración usa la base `ecommerce_test` y corre los archivos **de a uno**, porque
+comparten la misma base de datos. `tests/global-setup.ts` aplica las migraciones antes de empezar
+y se niega a correr si la URL no apunta a una base de test.
+
+La credencial **no se versiona**: la suite resuelve `TEST_DATABASE_URL` con esta precedencia
+(`tests/helpers/test-database.ts`):
+
+1. `TEST_DATABASE_URL` del `.env` local (ignorado por git) — la fuente normal en desarrollo.
+2. `TEST_DATABASE_URL` del entorno del sistema — la fuente normal en CI, donde no hay `.env`.
+
+`.env.test` (versionado) no trae la URL de la base: si la trajera, al cargarse pisaría al valor
+del entorno del sistema. Solo define el secreto de autenticación y las claves falsas de Stripe.
+
+Si ninguna fuente trae la clave real, la suite se detiene con un mensaje que explica qué definir.
 
 ## Server Actions
 

@@ -78,7 +78,7 @@ npm install
 
 # 1. Variables de entorno
 cp .env.example .env      # en Windows: copy .env.example .env
-# Edita .env y define DATABASE_URL, DATABASE_URL_TEST y AUTH_SECRET
+# Edita .env y define DATABASE_URL, TEST_DATABASE_URL y AUTH_SECRET
 
 # 2. Esquema + datos de demostración
 npm run db:migrate
@@ -107,7 +107,7 @@ La app queda en <http://localhost:3000>.
 | Variable | Para qué sirve |
 |---|---|
 | `DATABASE_URL` | Conexión a PostgreSQL de desarrollo. |
-| `DATABASE_URL_TEST` | Base `ecommerce_test` que usa la suite de integración. |
+| `TEST_DATABASE_URL` | Base `ecommerce_test` que usa la suite de integración. La clave vive solo en tu `.env` local, nunca en el repositorio. |
 | `AUTH_SECRET` | Secreto HS256 del JWT. Mínimo 32 caracteres. |
 | `APP_URL` | URL base para las redirecciones de Stripe. |
 | `STRIPE_SECRET_KEY` | Clave privada de Stripe (modo test). |

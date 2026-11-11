@@ -532,9 +532,16 @@ cadena retrasa la entrega completa.
 | 17 | TST-1 | Suite unitaria del motor de descuento | 3 |
 | 18 | TST-2 | Suite de integración del servicio de cupones | 5 |
 
-### Sprint 2 — Cupón en el carrito y cobro (21 pts)
+### Sprint 2 — Cupón en el carrito y cobro (24 pts)
 
 **Objetivo**: aplicar un cupón y cobrar el importe correcto.
+
+> ⚠️ Este sprint suma **24 puntos**, por encima de la velocidad nominal de 20. No es un error de
+> suma: es una señal de sobrecarga. Si el equipo confirma 20 pts/sprint, hay dos salidas
+> razonables — adelantar ENB-4 (8 pts) al Sprint 1 si sobra capacidad, o mover TST-3 al
+> Sprint 3. Dividir ENB-4 en dos enablers de 5 pts (crear el cupón efímero en Stripe +
+> congelar el descuento / verificar el total en el webhook) es la tercera opción y la más
+> limpia.
 
 | # | ID | Título | Pts |
 |---|---|---|---|

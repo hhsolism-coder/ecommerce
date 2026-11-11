@@ -20,20 +20,24 @@
   - [ ] Crear el board con las 6 columnas del plan
   - [ ] Crear los custom fields `Priority`, `Value`, `Component`, `Estimate`, `Sprint`, `Epic`, `Type`
   - [ ] Configurar las reglas de transición (PR abierto → In Review, PR fusionado → Done)
+  - [ ] **Bloqueado**: el token de `gh` no tiene los scopes `project` / `read:project`.
+        Requiere `gh auth refresh -s project,read:project` (autorización en el navegador).
+        El script que completa el board está listo en `%TEMP%\setup-project-board.ps1`.
 - [ ] **Capacidad del equipo evaluada**: velocidad y asignación de responsables
   - [ ] Confirmar la velocidad real (el plan asume 20 pts/sprint)
   - [ ] Asignar responsable a cada enabler
 
 ### Preparación técnica previa a crear los issues
 
-- [ ] Crear las labels que usa el plan:
+- [x] Crear las labels que usa el plan (19 creadas):
   `epic`, `feature`, `user-story`, `enabler`, `test`,
   `priority-critical`, `priority-high`, `priority-medium`, `priority-low`,
   `value-high`, `value-medium`, `value-low`,
   `frontend`, `backend`, `database`, `infrastructure`, `admin`, `cart`, `coupons`
-- [ ] Crear el milestone **v1.1 — Motor de descuentos**
-- [ ] Verificar que existen las plantillas `feature_request.yml` / `chore_request.yml` en
-      `.github/ISSUE_TEMPLATE/` (el repositorio no tiene aún carpeta `.github`)
+- [x] Crear el milestone **v1.1 — Motor de descuentos** (milestone #1)
+- [x] Verificar que existen las plantillas `feature_request.yml` / `chore_request.yml` en
+      `.github/ISSUE_TEMPLATE/` — **el repositorio no tiene carpeta `.github`**, así que no
+      hay plantillas que reutilizar: los issues se crearon con el cuerpo completo del plan
 
 ---
 
@@ -41,11 +45,11 @@
 
 - [x] **Epic issue creado** con descripción completa, valor y criterios de aceptación
   - #1 — Epic: Descuentos y cupones
-- [ ] **Epic milestone creado** con la versión objetivo
-  - Milestone `v1.1 — Motor de descuentos`
-- [ ] **Labels del épico aplicadas**: `epic`, prioridad, valor y equipo
-- [ ] **Épico agregado al board** en la columna Backlog
-- [ ] **Estimación del épico asignada**: XL (73 story points)
+- [x] **Epic milestone creado** con la versión objetivo
+  - Milestone `v1.1 — Motor de descuentos` (#1)
+- [x] **Labels del épico aplicadas**: `epic`, prioridad, valor y equipo
+- [ ] **Épico agregado al board** en la columna Backlog — pendiente del scope `project`
+- [x] **Estimación del épico asignada**: XL (73 story points)
 
 ### Contenido del issue del épico
 
@@ -68,8 +72,8 @@
   - Bloqueada por: ninguna
 - [x] **Estimación de la feature completada** con t-shirt sizing: XL
 - [x] **Criterios de aceptación de la feature definidos** con resultados medibles
-- [ ] **Labels de la feature aplicadas**: `feature`, `priority-high`, `value-high`, `backend`
-- [ ] **Feature agregada al board** en Backlog
+- [x] **Labels de la feature aplicadas**: `feature`, `priority-high`, `value-high`, `backend`
+- [ ] **Feature agregada al board** en Backlog — pendiente del scope `project`
 
 ### Contenido del issue de la feature
 
@@ -163,9 +167,13 @@
 
 ## Definición de Hecho de la creación de issues
 
-- [ ] Los 20 issues existen con su título, cuerpo y labels correctos
-- [ ] Las dependencias están anotadas en el cuerpo de cada issue
-- [ ] El épico y la feature enlazan con todos sus hijos
-- [ ] El board tiene las 6 columnas y los custom fields
-- [ ] El milestone `v1.1` contiene el épico y la feature
-- [ ] La suma de las estimaciones por sprint coincide con lo planificado (21 / 21 / 19 / 12)
+- [x] Los 20 issues existen con su título, cuerpo y labels correctos
+- [x] Las dependencias están anotadas en el cuerpo de cada issue
+- [x] El épico y la feature enlazan con todos sus hijos
+- [ ] El board tiene las 6 columnas y los custom fields — pendiente del scope `project`
+- [x] El milestone `v1.1` contiene el épico y la feature (20 issues abiertos)
+- [x] La suma de las estimaciones por sprint coincide con lo planificado
+      (21 / 24 / 19 / 9 + 3 de buffer = 73)
+
+> Nota: el Sprint 2 suma 24 puntos y supera la velocidad nominal de 20. Está documentado en
+> el [project plan](./project-plan.md) con las tres opciones para equilibrarlo.
